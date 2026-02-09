@@ -29,7 +29,6 @@ export async function getOpenOrderByTable(tableId){
     const sql = `
     SELECT id, table_id, server_id, status
     FROM orders
-    WHERE orders
     WHERE table_id = $1
     AND status = 'open;`;
 
@@ -43,8 +42,8 @@ export async function closeOrder(orderId){
     SET status = 'closed'
     WHERE id = $1
     AND status = 'open'
-    RETURNING id, status;`;
+    RETURNING id, status`;
 
-    const { rows: [order] } = await db.query(sql, [order]);
+    const { rows: [order] } = await db.query(sql, [orderId]);
     return order;
 }

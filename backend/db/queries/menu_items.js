@@ -24,7 +24,7 @@ export async function getMenuItems() {
 export async function getAvailableMenuItems(){
     const sql = `
     SELECT id, name, category_id, price
-    FROM menu-items
+    FROM menu_items
     WHERE available = TRUE
     ORDER BY name`;
 
@@ -51,10 +51,10 @@ export async function getMenuItemsById(id) {
     WHERE id = $1`;
 
     const { rows: [item] } = await db.query(sql, [id]);
-    return category;
+    return item;
 }
 
-export async function setMenuItemAvilability(id, available) {
+export async function setMenuItemAvailability(id, available) {
     const sql = `
     UPDATE menu_items
     SET available = $2
