@@ -4,11 +4,10 @@ import {useNavigate} from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useOrder } from "../context/OrderContext";
 
-import TableGrid from "../components/TableGrid";
-import CategoryBar from "../components/CategoryBar";
-import MenuGrid from "../components/MenuGrid";
-import OrderPanel from "../components/OrderPanel";
-import PaymentModal from "../components/PaymentModal";
+import TableGrid from "../components/pos/TableGrid";
+import CategoryBar from "../components/pos/CategoryBar";
+import MenuGrid from "../components/pos/MenuGrid";
+import OrderPanel from "../components/pos/OrderPanel";
 
 export default function POS(){
     const { user, logout } = useAuth();

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchTables } from "../api/tables";
+import { getTables } from "../api/tables";
 
 export function useTables() {
     const [tables, setTables] = useState([]);
@@ -11,7 +11,7 @@ export function useTables() {
         setError(null);
 
         try {
-            const data = await fetchTables();
+            const data = await getTables();
             setTables(data);
         } catch (error) {
             setError(error.message || "Failed to load tables");

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchCategories } from "../api/categories";
-import { fetchMenuItemsByCategory } from "../api/menuItems";
+import { getCategories } from "../api/categories";
+import { getMenuItems } from "../api/menuItems";
 
 export function useMenu() {
   const [categories, setCategories] = useState([]);
@@ -13,7 +13,7 @@ export function useMenu() {
   useEffect(() => {
     async function loadCategories() {
       try {
-        const data = await fetchCategories();
+        const data = await getCategories();
         setCategories(data);
         if (data.length > 0) {
           setActiveCategory(data[0].id); 
@@ -33,7 +33,7 @@ export function useMenu() {
     async function loadItems() {
       try {
         setLoading(true);
-        const data = await fetchMenuItemsByCategory(activeCategory);
+        const data = await getMenuItems(activeCategory);
         setItems(data);
       } catch (err) {
         setError(err.message || "Failed to load menu items");

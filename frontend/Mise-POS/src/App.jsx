@@ -4,9 +4,9 @@ import Login from "./pages/Login";
 import POS from "./pages/POS";
 import Admin from "./pages/Admin";
 
-import Header from "./layout/Header";
-import Sidebar from "./layout/Sidebar";
-import ProtectedRoute from "./layout/ProtectedRoute";
+import Header from "./components/layout/Header";
+import Sidebar from "./components/layout/Sidebar";
+import ProtectedRoute from "./components/layout/ProtectedRoute"
 
 export default function App() {
   return (
