@@ -2,9 +2,9 @@ import express from "express";
 import {
     addPayment,
     getPaymentsByOrder
-} from "../db/queries/payments.js";
+} from "../queries/payments.js";
 
-export default router;
+
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
                 error: "orderId and positive amount are required"
             });
         }
-        const payment = await createPayment(orderId, amount);
+        const payment = await addPayment(orderId, amount);
         res.status(201).json(payment);
     } catch (error) {
         console.error(error);
@@ -35,3 +35,5 @@ router.post("/", async (req, res) => {
     }
 
 });
+
+export default router;

@@ -30,7 +30,7 @@ export async function getOpenOrderByTable(tableId){
     SELECT id, table_id, server_id, status
     FROM orders
     WHERE table_id = $1
-    AND status = 'open;`;
+    AND status = 'open'`;
 
     const { rows: [order] } = await db.query(sql, [tableId]);
     return order;

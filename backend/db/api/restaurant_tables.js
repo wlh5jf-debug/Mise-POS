@@ -3,8 +3,8 @@ import {
     createTable,
     getTables,
     getTableById
-} from "../db/queries/restaurant_tables.js";
-export default router;
+} from "../queries/restaurant_tables.js";
+
 
 const router = express.Router();
  
@@ -51,3 +51,4 @@ router.post("/", async (req, res) =>
 }
 );
 
+export default router;

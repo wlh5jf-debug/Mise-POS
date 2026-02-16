@@ -3,8 +3,7 @@ import {
     getCategories,
     createCategory,
     getCategoryById
-} from "../db/queries/categories";
-export default router;
+} from "../queries/categories.js";
 
 const router = express.Router();
 
@@ -47,3 +46,5 @@ router.post("/", async (req, res) => {
         res.status(500).json({ error: "Failed to create a category" });
     }
 })
+
+export default router;

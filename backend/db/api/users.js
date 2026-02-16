@@ -5,8 +5,8 @@ import {
     getUserByNameAndPin,
     getActiveUsers,
     deactivateUser
-} from "../db/queries/users.js";
-export default router;
+} from "../queries/users.js";
+
 
 const router = express.Router();
 
@@ -69,3 +69,4 @@ router.patch("/:id/deactivate", async(req, res) =>
     }
 })
 
+export default router;

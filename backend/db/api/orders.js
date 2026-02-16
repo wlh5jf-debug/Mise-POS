@@ -4,8 +4,8 @@ import {
     getOrderById,
     getOpenOrderByTable,
     closeOrder
-} from "../db/queries/orders.js";
-export default router;
+} from "../queries/orders.js";
+
 
 const router = express.Router();
 
@@ -79,3 +79,5 @@ router.post("/", async (req,res) => {
             res.status(500).json({ error: "Failed to close order"})
         }
     });
+
+    export default router;

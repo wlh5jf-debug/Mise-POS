@@ -1,12 +1,12 @@
 import db from "#db/client";
 
-export async function createTable(tableNumber, capacity) {
+export async function createTable(table_Number, capacity) {
     const sql = `
     INSERT INTO restaurant_tables(table_number, capacity)
     VALUES ($1, $2)
     RETURNING *`;
 
-    const { rows: [table] } = await db.query(sql, [tableNumber, capacity]);
+    const { rows: [table] } = await db.query(sql, [table_Number, capacity]);
     return table;
 
 }

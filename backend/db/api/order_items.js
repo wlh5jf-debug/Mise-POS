@@ -4,8 +4,8 @@ import {
     getOrderItems,
     updateOrderItemQuantity,
     removeOrderItem
-} from "../db/queries/order_items.js";
-export default router;
+} from "../queries/order_items.js";
+
 
 const router = express.Router();
 
@@ -79,3 +79,5 @@ router.delete("/:id", async (req, res) => {
         res.status(500).json({ error: "Failed to remove item" });
     }
 });
+
+export default router;

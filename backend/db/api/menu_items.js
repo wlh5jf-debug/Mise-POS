@@ -4,10 +4,10 @@ import {
     getMenuItems,
     getAvailableMenuItems,
     getMenuItemsByCategory,
-    getMenuItemById,
+    getMenuItemsById,
     setMenuItemAvailability
-} from "../db/queries/menu_items.js";
-export default router;
+} from "../queries/menu_items.js";
+
 
 const router = express.Router();
 
@@ -43,7 +43,7 @@ router.get("/category/:categoryId", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        const item = await getMenuItemById(req.params.id);
+        const item = await getMenuItemsById(req.params.id);
         if (!item) {
             return res.status(404).json({ error: "Item not found"})
         }
@@ -89,3 +89,5 @@ router.patch("/:id/availability", async (req, res) => {
         res.status(500).json({ error: "Failed to update availability" });
     }
 })
+
+export default router;

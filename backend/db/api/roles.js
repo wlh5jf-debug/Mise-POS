@@ -1,6 +1,6 @@
 import express from "express";
-import { getRoles, createRole} from "../db/queries/roles.js";
-export default router;
+import { getRoles, createRole} from "../queries/roles.js";
+
 
 const router = express.Router();
 
@@ -37,3 +37,4 @@ if (error.code === "23505") {
 }
 });
 
+export default router;
