@@ -25,18 +25,21 @@ export async function getTableById(id) {
     }
 }
 
-export async function createTable(table_number, capacity) {
+export async function createTable(table_number, capacity, token) {
     try {
         const res = await fetch(BASE_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify({ table_number, capacity })
         });
         if (!res.ok) {
             throw new Error("Failed to create table");
         }
         return res.json();
-    } catch (error) {  
+    } catch (error) {
         throw new Error(error.message || "Failed to create table");
     }
 }
@@ -57,18 +60,19 @@ export async function updateTable(id, { table_number, capacity }) {
     }
 }
 
-export async function deleteTable(id) {
+export async function deleteTable(id, token) {
     try {
         const res = await fetch(`${BASE_URL}/${id}`, {
-            method: "DELETE"
-        });         
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         if (!res.ok) {
             throw new Error("Failed to delete table");
-        }       
+        }
         return res.json();
     } catch (error) {
         throw new Error(error.message || "Failed to delete table");
-    }  
+    }
 }
 
 

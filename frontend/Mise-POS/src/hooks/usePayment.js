@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { addPayment, fetchPaymentsByOrder } from "../api/payments";
+import { addPayment, getPaymentsByOrder as fetchPaymentsByOrder } from "../api/payments";
 
 export function usePayment(orderId, orderTotal) {
     const [payments, setPayments] = useState([]);

@@ -23,32 +23,50 @@ export default function PaymentModal({ orderId, orderTotal = 0, onClose, onSucce
     };
 
     return (
-        <div className="payment-modal">
-            <h2>Payment</h2>
-            <div>
-                <label>
-                    Amount owed: ${(orderTotal / 100)}
+        <div className="payment-modal-backdrop">
+            <div className="payment-modal">
+                <div className="payment-modal-header">
+                    <h2>Payment</h2>
+                    <button className="payment-modal-close" onClick={onClose}>✕</button>
+                </div>
+
+                <div className="payment-modal-summary">
+                    <span>Amount owed</span>
+                    <span className="payment-modal-total">${(orderTotal / 100).toFixed(2)}</span>
+                </div>
+
+                <label className="payment-modal-label">
+                    Enter amount
                     <input
+                        className="payment-modal-input"
                         type="number"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        placeholder="Enter Amount"
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
                     />
                 </label>
-            </div>
-            {(error || localError) && <p className="error">{error || localError}</p>}
-            <button onClick={handlePayment} disabled={loading}>
-                Submit Payment
-            </button>
-            <button onClick={onClose}>Close</button>
-            <div>
-                <strong>Payments:</strong>
-                <ul>
-                    {payments.map((p) => (
-                        <li key={p.id}>${(p.amount / 100)}</li>
-                    ))}
-                </ul>
-                <div>Remaining: ${(remainingBalance / 100)}</div>
+
+                {(error || localError) && <p className="error">{error || localError}</p>}
+
+                <button className="payment-modal-submit" onClick={handlePayment} disabled={loading}>
+                    {loading ? "Processing..." : "Submit Payment"}
+                </button>
+
+                {payments.length > 0 && (
+                    <div className="payment-modal-history">
+                        <strong>Payments applied</strong>
+                        <ul>
+                            {payments.map((p) => (
+                                <li key={p.id}>${(p.amount / 100).toFixed(2)}</li>
+                            ))}
+                        </ul>
+                        <div className="payment-modal-remaining">
+                            Remaining: <span>${(remainingBalance / 100).toFixed(2)}</span>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

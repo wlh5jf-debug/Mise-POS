@@ -33,11 +33,14 @@ export async function getCategoryById(id) {
 }
 
 
-export async function createCategory(name) {
+export async function createCategory(name, token) {
   try {
     const res = await fetch(BASE_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
       body: JSON.stringify({ name })
     });
 

@@ -21,15 +21,16 @@ export default function Pinpad({ value, onChange }) {
         {[1,2,3,4,5,6,7,8,9].map((num) => (
           <button
             key={num}
+            type="button"
             onClick={() => handleNumberClick(num.toString())}
           >
             {num}
           </button>
         ))}
 
-        <button onClick={handleClear}>Clear</button>
-        <button onClick={() => handleNumberClick("0")}>0</button>
-        <button onClick={handleBackspace}>⌫</button>
+        <button type="button" onClick={handleClear}>Clear</button>
+        <button type="button" onClick={() => handleNumberClick("0")}>0</button>
+        <button type="button" onClick={handleBackspace}>⌫</button>
       </div>
     </div>
   );

@@ -40,16 +40,19 @@ export async function getUserById(id) {
     } 
 };
 
-export async function createUser({ name, roleId, pin }) {
+export async function createUser({ name, roleId, pin }, token) {
     try {
         const res = await fetch(BASE_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify({ name, roleId, pin })
-        }); 
+        });
         if (!res.ok) {
             throw new Error("Failed to create user");
-        } 
+        }
         return res.json();
     } catch (error) {
         throw new Error(error.message || "Failed to create user");
@@ -86,18 +89,19 @@ export async function deleteUser(id) {
     }
 };
 
-export async function deactivateUser(id) {
+export async function deactivateUser(id, token) {
     try {
-        const res = await fetch(`${BASE_URL}/${id}/deactivate`, {       
-            method: "PATCH"
+        const res = await fetch(`${BASE_URL}/${id}/deactivate`, {
+            method: "PATCH",
+            headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) {
             throw new Error("Failed to deactivate user");
-        }   
+        }
         return res.json();
     } catch (error) {
         throw new Error(error.message || "Failed to deactivate user");
-    }   
+    }
 };
 
 

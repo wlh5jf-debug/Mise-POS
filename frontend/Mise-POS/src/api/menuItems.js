@@ -3,7 +3,7 @@ const BASE_URL = "/api/menu-items";
 
 export async function getMenuItems(categoryId) {
   const url = categoryId
-    ? `${BASE_URL}?categoryId=${categoryId}`
+    ? `${BASE_URL}/category/${categoryId}`
     : BASE_URL;
 
   try {
@@ -31,11 +31,14 @@ export async function getMenuItemById(id) {
 }
 
 
-export async function createMenuItem({ name, price, categoryId }) {
+export async function createMenuItem({ name, price, categoryId }, token) {
   try {
     const res = await fetch(BASE_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
       body: JSON.stringify({ name, price, categoryId })
     });
 
@@ -50,11 +53,14 @@ export async function createMenuItem({ name, price, categoryId }) {
 }
 
 
-export async function updateMenuItem(id, { name, price, categoryId }) {
+export async function updateMenuItem(id, { name, price, categoryId }, token) {
   try {
     const res = await fetch(`${BASE_URL}/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
       body: JSON.stringify({ name, price, categoryId })
     });
 
@@ -69,10 +75,11 @@ export async function updateMenuItem(id, { name, price, categoryId }) {
 }
 
 
-export async function deleteMenuItem(id) {
+export async function deleteMenuItem(id, token) {
   try {
     const res = await fetch(`${BASE_URL}/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${token}` }
     });
 
     if (!res.ok) {
@@ -82,5 +89,26 @@ export async function deleteMenuItem(id) {
     return res.json();
   } catch (err) {
     throw new Error(err.message || "Failed to delete menu item");
+  }
+}
+
+export async function setMenuItemAvailability(id, available, token) {
+  try {
+    const res = await fetch(`${BASE_URL}/${id}/availability`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ available }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to update availability");
+    }
+
+    return res.json();
+  } catch (err) {
+    throw new Error(err.message || "Failed to update availability");
   }
 }
