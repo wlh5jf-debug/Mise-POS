@@ -4,7 +4,9 @@ import {
     createCategory,
     getCategoryById
 } from "../queries/categories.js";
+import requireRole from "../../middleware/requireRole.js";
 
+const requireAdmin = requireRole(1);
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -31,7 +33,7 @@ router.get("/:id", async (req, res) => {
 });
 
 
-router.post("/", async (req, res) => {
+router.post("/", requireAdmin, async (req, res) => {
     try {
         const { name } = req.body;
         if (!name) {

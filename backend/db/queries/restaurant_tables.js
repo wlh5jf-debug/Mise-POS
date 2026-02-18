@@ -30,3 +30,13 @@ export async function getTableById(id){
     return table;
 }
 
+export async function deleteTable(id) {
+    const sql = `
+    DELETE FROM restaurant_tables
+    WHERE id = $1
+    RETURNING id, table_number`;
+
+    const { rows: [table] } = await db.query(sql, [id]);
+    return table;
+}
+

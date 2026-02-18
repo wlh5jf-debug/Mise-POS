@@ -1,83 +1,120 @@
 import express from "express";
 import {
-    createOrder,
-    getOrderById,
-    getOpenOrderByTable,
-    closeOrder
+  createOrder,
+  getOrderById,
+  getOpenOrderByTable,
+  getOpenOrders,
+  closeOrder
 } from "../queries/orders.js";
-
+import { getOrderItems } from "../queries/order_items.js";
+console.log("🔥 LOADED NEW ORDERS ROUTES");
 
 const router = express.Router();
 
-router.post("/", async (req,res) => {
-    try {
-        const { tableId, serverId } = req.body;
 
-        if (!tableId || serverId ) {
-            return res.status(400).json({ error: "tableId and serverId required" });
-        }
+router.post("/", async (req, res) => {
+  try {
+    const { tableId } = req.body;
 
-        const order = await createOrder(tableId, serverId);
-
-        if (!order) {
-            return res.status(409).json ({
-                error: "Table already has an open order"
-            });
-        }
-
-        res.status(201).json(order);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Failed to create order" })
+    if (!tableId) {
+      return res.status(400).json({ error: "tableId is required" });
     }
-    });
 
-    router.get("/:id", async (req, res) => {
-    try {
-        const order = await getOrderById(req.params.id);
-
-        if (!order) {
-            return res.status(404).json({ error: "Order not found" });
-        }
-
-        res.json(order)
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Failed to fetch order" });
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
     }
-    });
 
-    router.get("/table/:tableId/open", async (req, res) => {
-        try {
-            const order = await getOpenOrderByTable(req.params.tableId);
+    const order = await createOrder(tableId, req.user.id);
 
-            if (!order) {
-                return res.status(404).json({
-                    error: "No open order for this table"
-                });
-            }
-            res.json(order);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: "Failed to fetch an open order" });
-        }
-    });
+    if (!order) {
+      return res.status(409).json({
+        error: "Table already has an open order",
+      });
+    }
 
-    router.patch("/:id/close", async (req, res) => {
-        try{
-            const order = await closeOrder(req.params.id);
+    res.status(201).json(order);
+  } catch (err) {
+    console.error("Create order failed:", err);
+    res.status(500).json({ error: "Failed to create order" });
+  }
+});
 
-            if (!order) {
-                return res.status(409).json({
-                    error: "Order is closed or does not exist"
-                });
-            }
 
-            res.json(order);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: "Failed to close order"})
-        }
-    });
 
-    export default router;
+ 
+router.get("/open", async (req, res) => {
+  try {
+    const orders = await getOpenOrders();
+    res.json(orders);
+  } catch (err) {
+    console.error("Fetch open orders failed:", err);
+    res.status(500).json({ error: "Failed to fetch open orders" });
+  }
+});
+
+router.get("/active/:tableId", async (req, res) => {
+  try {
+    const order = await getOpenOrderByTable(req.params.tableId);
+
+    if (!order) {
+      return res.status(200).json(null);
+    }
+
+    res.json(order);
+  } catch (err) {
+    console.error("Fetch active order failed:", err);
+    res.status(500).json({ error: "Failed to fetch active order" });
+  }
+});
+
+/**
+ * Get order items (must come before /:id)
+ */
+router.get("/:orderId/items", async (req, res, next) => {
+  try {
+    const items = await getOrderItems(req.params.orderId);
+    res.json(items);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * Close an order
+ */
+router.patch("/:id/close", async (req, res) => {
+  try {
+    const order = await closeOrder(req.params.id);
+
+    if (!order) {
+      return res.status(409).json({
+        error: "Order is already closed or does not exist"
+      });
+    }
+
+    res.json(order);
+  } catch (err) {
+    console.error("Close order failed:", err);
+    res.status(500).json({ error: "Failed to close order" });
+  }
+});
+
+/**
+ * Get order by ID (GENERIC — MUST BE LAST)
+ */
+router.get("/:id", async (req, res) => {
+  try {
+    const order = await getOrderById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.json(order);
+  } catch (err) {
+    console.error("Fetch order failed:", err);
+    res.status(500).json({ error: "Failed to fetch order" });
+  }
+});
+
+export default router;

@@ -4,7 +4,7 @@ export async function createMenuItem(name, categoryId, price){
 const sql = `
 INSERT INTO menu_items(name, category_id, price)
 VALUES ($1, $2, $3)
-RETURNING name, category_id, price, available`;
+RETURNING id, name, category_id, price, available`;
 
 const { rows: [item] } = await db.query(sql, [name,categoryId, price]);
 return item;
@@ -49,6 +49,27 @@ export async function getMenuItemsById(id) {
     SELECT id, name, category_id, price, available
     FROM menu_items
     WHERE id = $1`;
+
+    const { rows: [item] } = await db.query(sql, [id]);
+    return item;
+}
+
+export async function updateMenuItem(id, name, categoryId, price) {
+    const sql = `
+    UPDATE menu_items
+    SET name = $2, category_id = $3, price = $4
+    WHERE id = $1
+    RETURNING id, name, category_id, price, available;`;
+
+    const { rows: [item] } = await db.query(sql, [id, name, categoryId, price]);
+    return item;
+}
+
+export async function deleteMenuItem(id) {
+    const sql = `
+    DELETE FROM menu_items
+    WHERE id = $1
+    RETURNING id;`;
 
     const { rows: [item] } = await db.query(sql, [id]);
     return item;

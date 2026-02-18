@@ -36,6 +36,17 @@ export async function getOpenOrderByTable(tableId){
     return order;
 }
 
+export async function getOpenOrders() {
+    const sql = `
+    SELECT o.id, o.table_id, o.server_id, o.status, u.name AS server_name
+    FROM orders o
+    JOIN users u ON o.server_id = u.id
+    WHERE o.status = 'open'`;
+
+    const { rows } = await db.query(sql);
+    return rows;
+}
+
 export async function closeOrder(orderId){
     const sql = `
     UPDATE orders

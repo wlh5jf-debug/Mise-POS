@@ -48,7 +48,7 @@ CREATE TABLE orders (
 CREATE TABLE order_items (
     id serial PRIMARY KEY,
     order_id integer REFERENCES orders(id) ON DELETE CASCADE,
-    menu_item_id integer REFERENCES menu_items(id),
+    menu_item_id integer REFERENCES menu_items(id) ON DELETE SET NULL,
     quantity integer NOT NULL DEFAULT 1,
     price integer NOT NULL
 );

@@ -5,10 +5,13 @@ import {
     getAvailableMenuItems,
     getMenuItemsByCategory,
     getMenuItemsById,
+    updateMenuItem,
+    deleteMenuItem,
     setMenuItemAvailability
 } from "../queries/menu_items.js";
+import requireRole from "../../middleware/requireRole.js";
 
-
+const requireAdmin = requireRole(1);
 const router = express.Router();
 
 router.get("/", async (req,res) => {
@@ -54,7 +57,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", requireAdmin, async (req, res) => {
     try {
         const { name, categoryId, price} = req.body;
 
@@ -71,7 +74,37 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.patch("/:id/availability", async (req, res) => {
+router.put("/:id", requireAdmin, async (req, res) => {
+    try {
+        const { name, categoryId, price } = req.body;
+        if (!name || !categoryId || !price) {
+            return res.status(400).json({ error: "name, categoryId, and price are required" });
+        }
+        const item = await updateMenuItem(req.params.id, name, categoryId, price);
+        if (!item) {
+            return res.status(404).json({ error: "Menu item not found" });
+        }
+        res.json(item);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to update menu item" });
+    }
+});
+
+router.delete("/:id", requireAdmin, async (req, res) => {
+    try {
+        const item = await deleteMenuItem(req.params.id);
+        if (!item) {
+            return res.status(404).json({ error: "Menu item not found" });
+        }
+        res.json({ message: "Deleted", id: item.id });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to delete menu item" });
+    }
+});
+
+router.patch("/:id/availability", requireAdmin, async (req, res) => {
     try {
         const { available } = req.body;
         if (typeof available !== "boolean") {

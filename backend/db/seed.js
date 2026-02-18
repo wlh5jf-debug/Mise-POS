@@ -5,9 +5,8 @@ import { createTable } from "./queries/restaurant_tables.js";
 import { createCategory } from "./queries/categories.js";
 import { createMenuItem } from "./queries/menu_items.js";
 import { createOrder } from "./queries/orders.js";
-import { addItemToOrder } from "./queries/orders_items.js";
+import { addItemToOrder } from "./queries/order_items.js";
 import { addPayment } from "./queries/payments.js"
-await db.connect();
 await seed();
 await db.end();
 console.log("🌱 Database seeded.");
@@ -30,9 +29,9 @@ for (const role of roles) {
 
 // Seed Users 
 
-const admin = await createUser("Beth", roleIds.admin, "1234");
-const tim = await createUser("Tim", roleIds.server, "5678");
-const nancy = await createUser("Nancy", roleIds.server, "9101");
+const admin = await createUser("Beth", roleIds["Admin"], "1234");
+const tim = await createUser("Tim", roleIds["Server"], "5678");
+const nancy = await createUser("Nancy", roleIds["Server"], "9101");
 
 // Seed Tables 
 

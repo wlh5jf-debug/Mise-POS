@@ -6,11 +6,13 @@ import {
     getActiveUsers,
     deactivateUser
 } from "../queries/users.js";
+import { createToken } from "#utils/jwt";
+import requireRole from "../../middleware/requireRole.js";
 
-
+const requireAdmin = requireRole(1);
 const router = express.Router();
 
-router.post("/", async (req, res) => { try{
+router.post("/", requireAdmin, async (req, res) => { try{
     const { name, roleId, pin } = req.body;
     if (!name || !roleId || !pin) {
         return res.status(400).json({ Error: "Name, roleId, and pin required"});
@@ -50,14 +52,15 @@ router.post("/login", async (req,res) => {
         const {name, pin} = req.body;
         const user = await getUserByNameAndPin(name, pin);
         if (!user) return res.status(401).json({ error: "Invalid name or PIN" });
-        res.json(user);
+        const token = createToken({ id: user.id });
+        res.json({ ...user, token });
     } catch (error) {
         console.error(error);
         res.status(500).json({error: error.message});
     }
 });
 
-router.patch("/:id/deactivate", async(req, res) => 
+router.patch("/:id/deactivate", requireAdmin, async(req, res) =>
 {
     try{
         const user = await deactivateUser(req.params.id);

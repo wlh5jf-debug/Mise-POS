@@ -4,7 +4,8 @@ export async function addItemToOrder(orderId, menuItemId, quantity = 1, price){
 const sql = `
 INSERT INTO order_items (order_id, menu_item_id, quantity, price)
 VALUES ($1, $2, $3, $4)
-RETURNING id, order_id, menu_item_id, quantity, price;`;
+RETURNING id, order_id, menu_item_id, quantity, price,
+  (SELECT name FROM menu_items WHERE id = menu_item_id) AS menu_item_name;`;
 
 const { rows: [item] } = await db.query(sql, [orderId, menuItemId, quantity, price]);
 return item;

@@ -2,10 +2,13 @@ import express from "express";
 import {
     createTable,
     getTables,
-    getTableById
+    getTableById,
+    deleteTable
 } from "../queries/restaurant_tables.js";
+import requireAuth from "../../middleware/requireAuth.js";
+import requireRole from "../../middleware/requireRole.js";
 
-
+const requireAdmin = requireRole(1);
 const router = express.Router();
  
 
@@ -32,23 +35,33 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) =>
-{
+router.post("/", requireAuth, async (req, res) => {
     try {
-      const { table_number, capacity} = req.body;
+        const { table_number, capacity } = req.body;
 
-      if (!table_number || !capacity) {
-        return res.status(400).json({ error: "table_number and capacity are required" });
-      }
+        if (!table_number || !capacity) {
+            return res.status(400).json({ error: "table_number and capacity are required" });
+        }
 
-     const table = await createTable(table_number, capacity);
-     res.status(201).json(table);
+        const table = await createTable(table_number, capacity);
+        res.status(201).json(table);
     } catch (error) {
         console.error(error);
-
-    res.status(500).json({ error: "Failed to create table" });
+        res.status(500).json({ error: "Failed to create table" });
     }
-}
-);
+});
+
+router.delete("/:id", requireAdmin, async (req, res) => {
+    try {
+        const table = await deleteTable(req.params.id);
+        if (!table) {
+            return res.status(404).json({ error: "Table not found" });
+        }
+        res.json({ message: "Deleted", id: table.id });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to delete table" });
+    }
+});
 
 export default router;
