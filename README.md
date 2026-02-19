@@ -1,0 +1,1 @@
+Mise-POS is a full-stack restaurant Point of Sale system built with React and Vite on the frontend and Node.js, Express, and PostgreSQL on the backend. It supports PIN-based staff authentication with role-based access control, menu and category management, order tracking by table, and payment processing.
