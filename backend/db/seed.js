@@ -72,8 +72,8 @@ await addItemToOrder(order2.id, soda.id, 2, soda.price);
 
 // Payments
 
-await addPayment(order1.id, 4100);
-await addPayment(order2.id, 4600);
+await addPayment(order1.id, 4100, "cash");
+await addPayment(order2.id, 4600, "card");
 
 
 }

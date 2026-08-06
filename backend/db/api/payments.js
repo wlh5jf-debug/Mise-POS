@@ -20,14 +20,14 @@ router.get("/order/:orderId", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const { orderId, amount } = req.body;
+        const { orderId, amount, paymentMethod = "cash" } = req.body;
 
         if (!orderId || amount == null || amount <= 0) {
             return res.status(400).json({
                 error: "orderId and positive amount are required"
             });
         }
-        const payment = await addPayment(orderId, amount);
+        const payment = await addPayment(orderId, amount, paymentMethod);
         res.status(201).json(payment);
     } catch (error) {
         console.error(error);

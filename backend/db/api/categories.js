@@ -2,7 +2,8 @@ import express from "express";
 import {
     getCategories,
     createCategory,
-    getCategoryById
+    getCategoryById,
+    deleteCategory
 } from "../queries/categories.js";
 import requireRole from "../../middleware/requireRole.js";
 
@@ -48,5 +49,18 @@ router.post("/", requireAdmin, async (req, res) => {
         res.status(500).json({ error: "Failed to create a category" });
     }
 })
+
+router.delete("/:id", requireAdmin, async (req, res) => {
+    try {
+        const category = await deleteCategory(req.params.id);
+        if (!category) {
+            return res.status(404).json({ error: "Category not found" });
+        }
+        res.json({ message: "Deleted", id: category.id });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to delete category" });
+    }
+});
 
 export default router;

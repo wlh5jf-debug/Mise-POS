@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { usePayment } from "../../hooks/usePayment";
 
+const PAYMENT_METHODS = [
+    { id: "cash", label: "Cash" },
+    { id: "card", label: "Card" },
+    { id: "gift_card", label: "Gift Card" },
+];
+
 export default function PaymentModal({ orderId, orderTotal = 0, onClose, onSuccess }) {
     const { payments, remainingBalance, loading, error, submitPayment } = usePayment(orderId, orderTotal);
+    const [paymentMethod, setPaymentMethod] = useState("cash");
     const [amount, setAmount] = useState("");
     const [localError, setLocalError] = useState(null);
+
+    const displayTotal = (orderTotal / 100).toFixed(2);
+    const displayRemaining = (remainingBalance / 100).toFixed(2);
 
     const handlePayment = async () => {
         const numeric = Number(amount);
@@ -13,12 +23,15 @@ export default function PaymentModal({ orderId, orderTotal = 0, onClose, onSucce
             return;
         }
 
+        setLocalError(null);
         try {
-            await submitPayment(numeric);
-            if (onSuccess) onSuccess();
-            onClose();
-        } catch (error) {
-            setLocalError(error.message || "Failed to process payment");
+            await submitPayment(numeric, paymentMethod);
+            if (remainingBalance - numeric <= 0) {
+                if (onSuccess) onSuccess();
+                onClose();
+            }
+        } catch (err) {
+            setLocalError(err.message || "Failed to process payment");
         }
     };
 
@@ -26,17 +39,37 @@ export default function PaymentModal({ orderId, orderTotal = 0, onClose, onSucce
         <div className="payment-modal-backdrop">
             <div className="payment-modal">
                 <div className="payment-modal-header">
-                    <h2>Payment</h2>
+                    <h2>Checkout</h2>
                     <button className="payment-modal-close" onClick={onClose}>✕</button>
                 </div>
 
                 <div className="payment-modal-summary">
-                    <span>Amount owed</span>
-                    <span className="payment-modal-total">${(orderTotal / 100).toFixed(2)}</span>
+                    <span>Order Total</span>
+                    <span className="payment-modal-total">${displayTotal}</span>
+                </div>
+
+                {payments.length > 0 && (
+                    <div className="payment-modal-remaining-row">
+                        <span>Remaining</span>
+                        <span className="payment-modal-remaining-amount">${displayRemaining}</span>
+                    </div>
+                )}
+
+                <div className="payment-method-label">Payment Method</div>
+                <div className="payment-method-buttons">
+                    {PAYMENT_METHODS.map((method) => (
+                        <button
+                            key={method.id}
+                            className={`payment-method-btn${paymentMethod === method.id ? " active" : ""}`}
+                            onClick={() => setPaymentMethod(method.id)}
+                        >
+                            {method.label}
+                        </button>
+                    ))}
                 </div>
 
                 <label className="payment-modal-label">
-                    Enter amount
+                    Amount Tendered
                     <input
                         className="payment-modal-input"
                         type="number"
@@ -56,15 +89,15 @@ export default function PaymentModal({ orderId, orderTotal = 0, onClose, onSucce
 
                 {payments.length > 0 && (
                     <div className="payment-modal-history">
-                        <strong>Payments applied</strong>
+                        <strong>Payments Applied</strong>
                         <ul>
                             {payments.map((p) => (
-                                <li key={p.id}>${(p.amount / 100).toFixed(2)}</li>
+                                <li key={p.id}>
+                                    <span>{p.payment_method === "gift_card" ? "Gift Card" : p.payment_method === "card" ? "Card" : "Cash"}</span>
+                                    <span>${(p.amount / 100).toFixed(2)}</span>
+                                </li>
                             ))}
                         </ul>
-                        <div className="payment-modal-remaining">
-                            Remaining: <span>${(remainingBalance / 100).toFixed(2)}</span>
-                        </div>
                     </div>
                 )}
             </div>

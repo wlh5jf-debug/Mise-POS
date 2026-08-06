@@ -99,7 +99,7 @@ export function useOrder(tableId, serverId) {
     }
   }
 
-  // Remove item
+  
   async function removeItem(orderItemId) {
     if (!order) return;
 

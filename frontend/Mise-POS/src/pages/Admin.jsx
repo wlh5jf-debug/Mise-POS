@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { getCategories, createCategory } from "../api/categories";
+import { getCategories, createCategory, deleteCategory } from "../api/categories";
 import {
     getMenuItems,
     createMenuItem,
@@ -103,6 +103,16 @@ export default function Admin() {
             setShowCategoryForm(false);
         } catch {
             setError("Failed to create category");
+        }
+    }
+
+    async function handleDeleteCategory(id) {
+        if (!confirm("Delete this category? Any menu items in it will lose their category.")) return;
+        try {
+            await deleteCategory(id, user.token);
+            setCategories((prev) => prev.filter((c) => c.id !== id));
+        } catch {
+            setError("Failed to delete category");
         }
     }
 
@@ -269,12 +279,16 @@ export default function Admin() {
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th />
                             </tr>
                         </thead>
                         <tbody>
                             {categories.map((c) => (
                                 <tr key={c.id}>
                                     <td>{c.name}</td>
+                                    <td className="col-actions">
+                                        <button onClick={() => handleDeleteCategory(c.id)}>Delete</button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

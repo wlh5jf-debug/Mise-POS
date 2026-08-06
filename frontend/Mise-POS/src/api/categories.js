@@ -53,3 +53,20 @@ export async function createCategory(name, token) {
     throw new Error(err.message || "Failed to create category");
   }
 }
+
+export async function deleteCategory(id, token) {
+  try {
+    const res = await fetch(`${BASE_URL}/${id}`, {
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to delete category");
+    }
+
+    return res.json();
+  } catch (err) {
+    throw new Error(err.message || "Failed to delete category");
+  }
+}

@@ -55,5 +55,6 @@ CREATE TABLE order_items (
 CREATE TABLE payments (
     id serial PRIMARY KEY,
     order_id integer REFERENCES orders(id) ON DELETE CASCADE,
-    amount integer NOT NULL
+    amount integer NOT NULL,
+    payment_method text NOT NULL DEFAULT 'cash'
 );

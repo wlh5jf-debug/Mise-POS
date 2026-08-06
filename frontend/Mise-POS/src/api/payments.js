@@ -1,11 +1,11 @@
 const BASE_URL = "/api/payments";
 
-export async function addPayment(orderId, amount) {
+export async function addPayment(orderId, amount, paymentMethod = "cash") {
     try {
         const res = await fetch(BASE_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orderId, amount })
+            body: JSON.stringify({ orderId, amount, paymentMethod })
         });
         if (!res.ok) {
             throw new Error("Failed to add payment");

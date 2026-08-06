@@ -541,10 +541,26 @@ input.input {
   white-space: nowrap;
 }
 
-.order-item-row span:last-child {
+.order-item-row span:nth-child(3) {
   font-weight: 600;
   color: var(--color-primary);
   white-space: nowrap;
+}
+
+.order-item-remove {
+  background: none;
+  border: none;
+  color: var(--color-text-soft);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.order-item-remove:hover {
+  background: var(--color-danger, #e74c3c);
+  color: #fff;
 }
 
 .order-items {
@@ -921,6 +937,8 @@ button[type="submit"] {
 }
 
 .payment-modal-history li {
+  display: flex;
+  justify-content: space-between;
   padding: var(--space-xs) 0;
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text);
@@ -937,4 +955,56 @@ button[type="submit"] {
 .payment-modal-remaining span {
   color: var(--color-success);
   font-size: 1.1rem;
+}
+
+.payment-modal-remaining-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) var(--space-md);
+  background: color-mix(in srgb, var(--color-success, #2e7d32) 12%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-success, #2e7d32) 30%, var(--color-border));
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text-soft);
+}
+
+.payment-modal-remaining-amount {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-success, #2e7d32);
+}
+
+.payment-method-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-soft);
+}
+
+.payment-method-buttons {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.payment-method-btn {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface-2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.payment-method-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.payment-method-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-primary-text);
 }

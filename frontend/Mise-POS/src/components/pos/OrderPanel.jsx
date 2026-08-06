@@ -1,14 +1,14 @@
 import OrderItemRow from "./OrderItemRow";
 import OrderTotal from "./OrderTotal";
 
-export default function OrderPanel({ items = [], onCheckout, onClear }) {
+export default function OrderPanel({ items = [], onRemoveItem, onCheckout, onClear }) {
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     return (
         <div className="order-panel">
             <div className="order-items">
                 {items.map((item) => (
-                    <OrderItemRow key={item.id} item={item} />
+                    <OrderItemRow key={item.id} item={item} onRemove={() => onRemoveItem(item.id)} />
                 ))}
             </div>
             <OrderTotal total={total} />

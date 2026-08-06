@@ -28,7 +28,7 @@ useEffect(() => {
 
 }, [orderId]);
 
-async function submitPayment(amount) {
+async function submitPayment(amount, paymentMethod = "cash") {
     if (!orderId) return;
 
     if (!amount || amount <= 0) {
@@ -37,7 +37,7 @@ async function submitPayment(amount) {
     }
 
     try {
-        const payment = await addPayment(orderId, amount);
+        const payment = await addPayment(orderId, amount, paymentMethod);
         setPayments(prev => [...prev, payment]);
     } catch (error) {
         setError(error.message || "Failed to submit payment");

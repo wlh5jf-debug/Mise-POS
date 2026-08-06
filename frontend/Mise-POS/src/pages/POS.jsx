@@ -12,7 +12,7 @@ import PaymentModal from "../components/pos/PaymentModal";
 
 export default function POS(){
     const { user } = useAuth();
-    const {order, items, startOrder, addItem, leaveOrder, closeCurrentOrder} = useOrder();
+    const {order, items, total, startOrder, addItem, removeItem, leaveOrder, closeCurrentOrder} = useOrder();
     const navigate = useNavigate();
 
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -44,13 +44,19 @@ export default function POS(){
                 {order && (
                     <OrderPanel
                         items={items}
+                        onRemoveItem={removeItem}
                         onCheckout={() => setShowPayment(true)}
                         onClear={closeCurrentOrder}
                     />
                 )}
             </div>
             {showPayment && (
-                <PaymentModal onClose={() => setShowPayment(false)} />
+                <PaymentModal
+                    orderId={order?.id}
+                    orderTotal={total}
+                    onClose={() => setShowPayment(false)}
+                    onSuccess={leaveOrder}
+                />
             )}
         </div>
     );       

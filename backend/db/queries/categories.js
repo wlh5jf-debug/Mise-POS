@@ -29,3 +29,13 @@ export async function getCategoryById(id) {
     const { rows: [category] } = await db.query(sql, [id]);
     return category;
 }
+
+export async function deleteCategory(id) {
+    const sql = `
+    DELETE FROM categories
+    WHERE id = $1
+    RETURNING id, name`;
+
+    const { rows: [category] } = await db.query(sql, [id]);
+    return category;
+}

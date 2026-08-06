@@ -55,7 +55,7 @@ export async function getActiveOrder(tableId) {
   return res.json();
 }
 export async function removeOrderItem(orderItemId) {
-  const res = await fetch(`${BASE_URL}/items/${orderItemId}`, {
+  const res = await fetch(`/api/order-items/${orderItemId}`, {
     method: "DELETE",
   });
   if (!res.ok) throw new Error("Failed to delete item");
