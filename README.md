@@ -126,3 +126,5 @@ The seed script creates the following demo accounts:
 | Nancy | Server | 9101 |
 
 It also creates 5 tables, 4 menu categories, 7 menu items, and 2 sample orders with payments.
+
+Thank you for taking the time to look at this project.
