@@ -1,4 +1,5 @@
-const BASE_URL = "/api/users";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const BASE_URL = `${API_URL}/users`;
 
 export async function loginUser(name, pin) {
     try {
